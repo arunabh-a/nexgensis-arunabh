@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
+import type { Book } from "../lib/types";
 
-export function useFilters(books) {
+export function useFilters(books: Book[]) {
     const [search, setSearch] = useState("");
     const [genreFilter, setGenreFilter] = useState("All");
     const [sortBy, setSortBy] = useState("title");

@@ -1,4 +1,5 @@
 import { GENRES, SORT_OPTIONS } from "../lib/constants";
+import type { FilterBarProps } from "../lib/types";
 
 export function FilterBar({
     search,
@@ -10,8 +11,8 @@ export function FilterBar({
     view,
     setView,
     books,
-}) {
-    const genreCounts = GENRES.reduce((acc, g) => {
+}: FilterBarProps) {
+    const genreCounts = GENRES.reduce<Record<string, number>>((acc, g) => {
         acc[g] = books.filter((b) => b.genre === g).length;
         return acc;
     }, {});
@@ -106,7 +107,7 @@ export function FilterBar({
 
             {/* View toggle */}
             <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                {["grid", "list"].map((v) => (
+                {(["grid", "list"] as const).map((v) => (
                     <button
                         key={v}
                         onClick={() => setView(v)}

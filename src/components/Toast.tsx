@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
+import type { ToastProps, ToastState, ToastType } from "../lib/types";
 
 export function Toast({
     message,
     type = "success",
     duration = 2800,
     onDismiss,
-}) {
+}: ToastProps) {
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
@@ -51,9 +52,9 @@ export function Toast({
 }
 
 export function useToast() {
-    const [toast, setToast] = useState(null);
+    const [toast, setToast] = useState<ToastState | null>(null);
 
-    const show = (message, type = "success") => {
+    const show = (message: string, type: ToastType = "success") => {
         setToast({ message, type, key: Date.now() });
     };
 

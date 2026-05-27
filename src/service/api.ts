@@ -1,6 +1,7 @@
 // Mock API - uses localStorage
 
 import { DEFAULT_BOOKS, STORAGE_KEY, DELAY_MS } from "../lib/constants";
+import type { Book, BookFormData } from "../lib/types";
 
 const delay = (ms = DELAY_MS) => new Promise((r) => setTimeout(r, ms));
 
@@ -15,7 +16,7 @@ function readStorage() {
     }
 }
 
-function writeStorage(books) {
+function writeStorage(books: Book[]): void {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
     } catch {
@@ -42,29 +43,29 @@ export const api = {
     },
 
     /** Create a new book */
-    async create(data) {
+    async create(data: BookFormData): Promise<Book> {
         await delay(250);
         const books = getBooks();
-        const newBook = {
+        const newBook: Book = {
             ...data,
             id: Date.now().toString(),
-            year: parseInt(data.year, 10),
+            year: Number(data.year),
         };
         writeStorage([...books, newBook]);
         return newBook;
     },
 
     /** Update an existing book by id */
-    async update(id, data) {
+    async update(id: string, data: BookFormData): Promise<Book> {
         await delay(250);
         const books = getBooks();
-        const idx = books.findIndex((b) => b.id === id);
+        const idx = books.findIndex((b: Book) => b.id === id);
         if (idx === -1) throw new Error(`Book ${id} not found`);
-        const updated = {
+        const updated: Book = {
             ...books[idx],
             ...data,
             id,
-            year: parseInt(data.year, 10),
+            year: Number(data.year),
         };
         books[idx] = updated;
         writeStorage(books);
@@ -72,10 +73,10 @@ export const api = {
     },
 
     /** Delete a book by id */
-    async delete(id) {
+    async delete(id: string): Promise<true> {
         await delay(200);
         const books = getBooks();
-        writeStorage(books.filter((b) => b.id !== id));
+        writeStorage(books.filter((b: Book) => b.id !== id));
         return true;
     },
 };

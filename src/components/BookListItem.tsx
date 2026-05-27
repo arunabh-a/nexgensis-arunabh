@@ -1,6 +1,7 @@
 import { StarRating } from "./StarRating";
+import type { BookListItemProps } from "../lib/types";
 
-export function BookListItem({ book, onEdit, onDelete }) {
+export function BookListItem({ book, onEdit, onDelete }: BookListItemProps) {
     return (
         <div
             style={{

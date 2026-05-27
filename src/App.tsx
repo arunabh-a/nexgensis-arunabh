@@ -7,6 +7,7 @@ import { BookForm } from "./components/BookForm";
 import { BookCard } from "./components/BookCard";
 import { BookListItem } from "./components/BookListItem";
 import { FilterBar } from "./components/FilterBar";
+import type { Book, BookFormData } from "./lib/types";
 
 export default function App() {
     const {
@@ -32,32 +33,32 @@ export default function App() {
     } = useFilters(books);
     const { toast, showToast, dismissToast } = useToast();
 
-    const [modal, setModal] = useState(null); // null | 'add' | <book object>
-    const [view, setView] = useState("grid");
+    const [modal, setModal] = useState<Book | "add" | null>(null);
+    const [view, setView] = useState<"grid" | "list">("grid");
 
-    // ── Handlers ──────────────────────────────────
+    // Handlers 
 
-    const handleAdd = async (data) => {
+    const handleAdd = async (data: BookFormData) => {
         const result = await addBook(data);
         if (result.success) {
             setModal(null);
-            showToast(`"${result.book.title}" added to your library`);
+            showToast(`"${result.book!.title}" added to your library`);
         } else {
             showToast(result.error || "Failed to add book", "error");
         }
     };
 
-    const handleUpdate = async (data) => {
-        const result = await updateBook(modal.id, data);
+    const handleUpdate = async (data: BookFormData) => {
+        const result = await updateBook((modal as Book).id, data);
         if (result.success) {
             setModal(null);
-            showToast(`"${result.book.title}" updated successfully`);
+            showToast(`"${result.book!.title}" updated successfully`);
         } else {
             showToast(result.error || "Failed to update book", "error");
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string) => {
         const book = books.find((b) => b.id === id);
         const result = await deleteBook(id);
         if (result.success) {
@@ -67,11 +68,11 @@ export default function App() {
         }
     };
 
-    // ── Render ─────────────────────────────────────
+    // Render
 
     return (
         <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-            {/* ── Top bar ── */}
+            {/* Top bar */}
             <header
                 style={{
                     borderBottom: "1px solid var(--border)",
@@ -375,11 +376,11 @@ export default function App() {
                                 gap: 16,
                             }}
                         >
-                            {filtered.map((book) => (
+                            {filtered.map((book: Book) => (
                                 <BookCard
                                     key={book.id}
                                     book={book}
-                                    onEdit={setModal}
+                                    onEdit={(b) => setModal(b)}
                                     onDelete={handleDelete}
                                 />
                             ))}
@@ -419,11 +420,11 @@ export default function App() {
                                 <span>Rating</span>
                                 <span />
                             </div>
-                            {filtered.map((book) => (
+                            {filtered.map((book: Book) => (
                                 <BookListItem
                                     key={book.id}
                                     book={book}
-                                    onEdit={setModal}
+                                    onEdit={(b) => setModal(b)}
                                     onDelete={handleDelete}
                                 />
                             ))}

@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { api } from "../service/api";
+import type { Book, BookFormData } from "../lib/types";
 
 export function useBooks() {
-    const [books, setBooks] = useState([]);
+    const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
 
     // Fetch
     const fetchBooks = useCallback(async () => {
@@ -15,7 +16,7 @@ export function useBooks() {
             const data = await api.getAll();
             setBooks(data);
         } catch (err) {
-            setError(err.message || "Failed to load books. Please try again.");
+            setError((err as Error).message || "Failed to load books. Please try again.");
         } finally {
             setLoading(false);
         }
@@ -26,7 +27,7 @@ export function useBooks() {
     }, [fetchBooks]);
 
     // Create
-    const addBook = useCallback(async (data) => {
+    const addBook = useCallback(async (data: BookFormData) => {
         setActionLoading(true);
         try {
             const created = await api.create(data);
@@ -35,7 +36,7 @@ export function useBooks() {
         } catch (err) {
             return {
                 success: false,
-                error: err.message || "Failed to add book.",
+                error: (err as Error).message || "Failed to add book.",
             };
         } finally {
             setActionLoading(false);
@@ -43,7 +44,7 @@ export function useBooks() {
     }, []);
 
     // Update
-    const updateBook = useCallback(async (id, data) => {
+    const updateBook = useCallback(async (id: string, data: BookFormData) => {
         setActionLoading(true);
         try {
             const updated = await api.update(id, data);
@@ -52,7 +53,7 @@ export function useBooks() {
         } catch (err) {
             return {
                 success: false,
-                error: err.message || "Failed to update book.",
+                error: (err as Error).message || "Failed to update book.",
             };
         } finally {
             setActionLoading(false);
@@ -60,7 +61,7 @@ export function useBooks() {
     }, []);
 
     // Delete
-    const deleteBook = useCallback(async (id) => {
+    const deleteBook = useCallback(async (id: string) => {
         try {
             await api.delete(id);
             setBooks((prev) => prev.filter((b) => b.id !== id));
@@ -68,7 +69,7 @@ export function useBooks() {
         } catch (err) {
             return {
                 success: false,
-                error: err.message || "Failed to delete book.",
+                error: (err as Error).message || "Failed to delete book.",
             };
         }
     }, []);

@@ -19,7 +19,7 @@ export function BookCard({ book, onEdit, onDelete }: BookCardProps) {
         await onDelete(book.id);
     };
 
-    const genreColor = GENRE_COLORS[book.genre] || "#5a5a5a";
+    const genreColor = GENRE_COLORS[book.genre as keyof typeof GENRE_COLORS] ?? "#5a5a5a";
 
     return (
         <article

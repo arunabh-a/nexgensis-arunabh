@@ -1,12 +1,13 @@
 import { useEffect } from "react";
+import type { ModalProps } from "../lib/types";
 
 /**
  * Modal — accessible overlay with focus trap & ESC to close.
  */
-export function Modal({ title, onClose, children }) {
+export function Modal({ title, onClose, children }: ModalProps) {
     // Close on ESC
     useEffect(() => {
-        const handleKey = (e) => {
+        const handleKey = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
         };
         document.addEventListener("keydown", handleKey);
