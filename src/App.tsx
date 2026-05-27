@@ -109,7 +109,7 @@ export default function App() {
                                 letterSpacing: -0.5,
                             }}
                         >
-                            Bibliotheca
+                            Bibliotheca (Nexgensis)
                         </span>
                         <span
                             style={{

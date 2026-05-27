@@ -1,6 +1,6 @@
 # Nexgensis — Book Management System
 
-A Book Management System built with React + Vite.
+A Book Management System named as Bibliotheca built with React + Vite.
 
 ## Features
 
